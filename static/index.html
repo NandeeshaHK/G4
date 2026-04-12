@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemma 4 Multimodal</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo-section">
+                <h1>Gemma 4</h1>
+                <p style="font-size: 12px; color: var(--text-secondary);">Premium Multimodal Hub</p>
+            </div>
+            
+            <div class="controls-section">
+                <div class="control-group">
+                    <label>Visual Token Budget</label>
+                    <input type="range" id="visualBudget" min="0" max="4" step="1" value="2">
+                    <p class="value-display" id="visualBudgetValue">280 tokens</p>
+                </div>
+                
+                <div class="control-group">
+                    <label>Context Length</label>
+                    <input type="range" id="contextLength" min="512" max="16384" step="512" value="4096">
+                    <p class="value-display" id="contextLengthValue">4096 tokens</p>
+                </div>
+
+                <div class="control-group">
+                    <label>Video Sampling Rate</label>
+                    <input type="range" id="videoFps" min="0.1" max="5" step="0.1" value="1.0">
+                    <p class="value-display" id="videoFpsValue">1.0 fps</p>
+                </div>
+                
+                <div class="control-group">
+                    <label>Temperature</label>
+                    <input type="range" id="temperature" min="0" max="2" step="0.1" value="1.0">
+                    <p class="value-display" id="temperatureValue">1.0</p>
+                </div>
+
+                <div class="control-group" style="flex-direction: row; align-items: center; justify-content: space-between;">
+                    <label>Thinking Mode</label>
+                    <input type="checkbox" id="thinkingMode" style="width: 20px; height: 20px; accent-color: var(--accent-color);">
+                </div>
+            </div>
+
+            <div style="margin-top: auto; padding-top: 20px;">
+                <button class="action-btn" style="font-size: 14px; display: flex; align-items: center; gap: 8px;" onclick="clearChat()">
+                    <i data-lucide="trash-2"></i> Clear Chat
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div class="chat-area">
+            <div class="messages-container" id="chatMessages">
+                <div class="ai-message message">
+                    Hello! I'm Gemma 4. I can understand text, images, audio, and video. How can I help you today?
+                </div>
+            </div>
+            
+            <!-- Previews -->
+            <div class="preview-container" id="previewContainer"></div>
+
+            <!-- Input Box -->
+            <div class="input-section">
+                <div class="input-wrapper">
+                    <button class="action-btn" onclick="document.getElementById('fileInput').click()">
+                        <i data-lucide="paperclip"></i>
+                    </button>
+                    <input type="file" id="fileInput" multiple style="display: none;" onchange="handleFiles(this.files)">
+                    <input type="text" id="userInput" placeholder="Ask me anything..." onkeypress="if(event.key === 'Enter') sendMessage()">
+                    <button class="send-btn" onclick="sendMessage()">
+                        <i data-lucide="send"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/main.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

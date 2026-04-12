@@ -6,3 +6,11 @@
 */.egg
 
 dist
+
+**/.cache
+
+**.jpg
+**/**.jpeg
+**/**.wav
+models/*
+
