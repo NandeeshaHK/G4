@@ -1,0 +1,7 @@
+{
+  "text": "gpu",
+  "image": "gpu",
+  "audio": "gpu",
+  "prefill_chunk_size": 256,
+  "gpu_mem_gb": 4
+}

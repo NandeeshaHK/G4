@@ -8,8 +8,10 @@
 
 const API_BASE = 'http://127.0.0.1:8000';
 const budgetOptions = [70, 140, 280, 560, 1120];
+const SESSION_ID = crypto.randomUUID();
 let currentFiles = [];   // { type, data (for preview), serverPath (after upload) }
 let chatHistory = [];
+let currentAbortController = null;
 
 // UI Elements
 const visualSlider = document.getElementById('visualBudget');
@@ -150,16 +152,25 @@ async function sendMessage() {
     let fullContent = "";
 
     try {
+        // Abort the previous in-flight request (same session).
+        if (currentAbortController) {
+            currentAbortController.abort();
+        }
+        currentAbortController = new AbortController();
+
         const response = await fetch(`${API_BASE}/api/chat`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            signal: currentAbortController.signal,
             body: JSON.stringify({
                 messages: chatHistory,
-                max_tokens: parseInt(contextSlider.value),
+                max_tokens: 1024,
+                max_context_tokens: parseInt(contextSlider.value),
                 temperature: parseFloat(tempSlider.value),
                 visual_token_budget: budgetOptions[visualSlider.value],
                 video_fps: parseFloat(fpsSlider.value),
-                enable_thinking: document.getElementById('thinkingMode').checked
+                enable_thinking: document.getElementById('thinkingMode').checked,
+                session_id: SESSION_ID
             })
         });
 
@@ -211,6 +222,10 @@ async function sendMessage() {
         }
 
     } catch (err) {
+        if (err.name === 'AbortError') {
+            // Request was superseded by a newer message — not an error.
+            return;
+        }
         console.error('[Chat Error]', err);
         statusSpan.innerText = `❌ Connection error: ${err.message}`;
     }

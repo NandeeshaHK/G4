@@ -41,5 +41,19 @@ GEMMA_ENABLE_VISION=false GEMMA_ENABLE_AUDIO=false uv run python -m uvicorn app:
 $env:GEMMA_ENABLE_VISION="false"; $env:GEMMA_ENABLE_AUDIO="false"; uv run python -m uvicorn app:app --host 0.0.0.0 --port 8000
 ```
 
+### Per-Modality CPU Offload (No API Changes)
+You can offload specific model components to CPU by creating an `engine_config.json` file in the project root.
+
+Example (offload text and audio to CPU, keep image on GPU):
+```json
+{
+  "audio": "cpu",
+  "image": "gpu",
+  "text": "cpu"
+}
+```
+
+Each key (`text`, `image`, `audio`) accepts either `"cpu"` or `"gpu"`.
+Missing keys default to `"gpu"` when running with CUDA.
 ## 🏗 Requirements
 `onnxruntime-gpu`, `torch`, and native CUDA hooks must be properly configured across your UV environment for `CUDAExecutionProvider` parameters to capture natively.

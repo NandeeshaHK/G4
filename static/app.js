@@ -276,7 +276,9 @@ async function streamResponse({ enableThinking, maxTokens, temperature, topP }) 
     const chunk = decoder.decode(value, { stream: true });
     const lines = chunk.split("\n").filter((l) => l.trim());
 
-    for (const line of lines) {
+    for (let line of lines) {
+      if (line.startsWith("data: ")) line = line.slice(6);
+      if (line === "[DONE]") break;
       try {
         const data = JSON.parse(line);
         if (data.error) throw new Error(data.error);
